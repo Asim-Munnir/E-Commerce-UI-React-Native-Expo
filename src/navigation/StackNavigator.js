@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Color";
 import { useNavigation } from "@react-navigation/native";
 import CartScreen from "../screens/CartScreen";
+import CartHeaderIcon from "../screens/CartHeaderIcon";
 
 
 const Stack = createNativeStackNavigator()
@@ -26,13 +27,14 @@ export default function StackNavigator() {
                 component={TabNavigator}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="ProductDetail" component={ProductDetail} options={{
-                title: "Product Details", headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("MainTabs", { screen: "Cart" })}>
-                        <Ionicons name="cart-outline" size={24} color={Colors.black} />
-                    </TouchableOpacity>
-                )
-            }} />
+            <Stack.Screen
+                name="ProductDetail"
+                component={ProductDetail}
+                options={{
+                    title: "Product Details",
+                    headerRight: () => <CartHeaderIcon />,
+                }}
+            />
         </Stack.Navigator>
     )
 }

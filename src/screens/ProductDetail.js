@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/Color'
 import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
+import Toast from 'react-native-toast-message';
 
 
 const ProductDetail = () => {
@@ -15,7 +16,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null)
   const [wishlist, setWishlist] = useState([])
   const [loading, setLoading] = useState(false)
-  
+
   const { addToCart } = useContext(CartContext);
 
   const toggleWishlist = (productId) => {
@@ -147,7 +148,16 @@ const ProductDetail = () => {
 
           {/* Bottom Buttons */}
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity onPress={() => addToCart(product)} style={[styles.button, { backgroundColor: Colors.white, borderColor: Colors.primary, borderWidth: 1 }]}>
+            <TouchableOpacity
+              onPress={() => {
+                addToCart(product);
+                Toast.show({
+                  type: 'success',
+                  text1: 'Added to Cart',
+                  text2: `${product.title} added successfully`,
+                  visibilityTime: 3000,
+                });
+              }} style={[styles.button, { backgroundColor: Colors.white, borderColor: Colors.primary, borderWidth: 1 }]}>
               <Ionicons name='cart-outline' size={20} color={Colors.primary} />
               <Text style={[styles.buttonText, { color: Colors.primary }]}>Add to Cart</Text>
             </TouchableOpacity>

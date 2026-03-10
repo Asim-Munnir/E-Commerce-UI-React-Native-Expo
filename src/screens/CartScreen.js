@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from 'react-native'
 import React, { useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/Color'
 import { CartContext } from '../context/CartContext'
-
+import Toast from 'react-native-toast-message';
 
 const CartScreen = () => {
   const { cartItems, removeFromCart } = useContext(CartContext)
@@ -42,7 +42,33 @@ const CartScreen = () => {
                       </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity onPress={() => removeFromCart(item._id)}>
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          "Remove Item",
+                          "Are you sure you want to remove this product from cart?",
+                          [
+                            {
+                              text: "Cancel",
+                              style: "cancel"
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                removeFromCart(item._id);
+                                Toast.show({
+                                  type: 'success',
+                                  text1: 'Item removed from cart',
+                                  text2: `${item?.title} deleted successfully`,
+                                  visibilityTime: 3000,
+                                });
+                              }
+                            }
+                          ]
+                        );
+                      }}
+                    >
                       <Ionicons name='trash-outline' size={20} color={'red'} />
                     </TouchableOpacity>
 
