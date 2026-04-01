@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
 import React, { useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/Color'
 import { CartContext } from '../context/CartContext'
 import Toast from 'react-native-toast-message';
+import { Image } from 'expo-image'
 
 const CartScreen = () => {
   const { cartItems, removeFromCart } = useContext(CartContext)
@@ -20,7 +21,7 @@ const CartScreen = () => {
         ) : (
           <FlatList
             data={cartItems}
-            keyExtractor={(item) => item._id.toString()}
+            keyExtractor={(item) => item?._id.toString()}
             renderItem={({ item }) => (
               <View style={styles.itemWrapper}>
                 <Image source={{ uri: item.image }} style={styles.itemImg} />

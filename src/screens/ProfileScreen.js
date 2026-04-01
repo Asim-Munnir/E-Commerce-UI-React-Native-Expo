@@ -59,6 +59,16 @@ const ProfileScreen = () => {
       >
         Update Profile
       </Button>
+
+      <Button
+        mode="contained"
+        style={styles.button}
+        icon="logout"
+        onPress={() => alert('Profile updated Successfully')}
+      >
+        Sign Out
+      </Button>
+
     </View>
   )
 }

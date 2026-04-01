@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import axios from 'axios'
@@ -7,6 +7,8 @@ import { Colors } from '../../constants/Color'
 import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import Toast from 'react-native-toast-message';
+import { Image } from 'expo-image'
+import { AboutSkeleton } from '../../components/AboutSkeleton'
 
 
 const ProductDetail = () => {
@@ -48,10 +50,11 @@ const ProductDetail = () => {
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={{ marginTop: 10 }}>Loading ...</Text>
-        </View>
+        // <View style={styles.loaderContainer}>
+        //   <ActivityIndicator size="large" color="#007AFF" />
+        //   <Text style={{ marginTop: 10 }}>Loading ...</Text>
+        // </View>
+        <AboutSkeleton />
       ) : (
         <>
           <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}>
@@ -61,6 +64,11 @@ const ProductDetail = () => {
                 <Image
                   source={{ uri: product.image }}
                   style={{ width: '100%', height: 350, resizeMode: 'contain', marginBottom: 20 }}
+                  placeholder={require("../../assets/images/expo-img-placeholder.png")}
+                  cachePolicy="memory-disk"
+                  transition={500}
+                  placeholderContentFit='cover'
+                  contentFit='cover'
                 />
 
                 {/* Rating & Wishlist */}

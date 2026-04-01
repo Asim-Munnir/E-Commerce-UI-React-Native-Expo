@@ -13,7 +13,9 @@ import { CartContext } from "../context/CartContext";
 const Tab = createBottomTabNavigator()
 
 export default function TabNavigator() {
+
     const { cartItems } = useContext(CartContext);
+
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen name="Home" component={HomeScreen} options={{

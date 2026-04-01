@@ -1,8 +1,11 @@
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../constants/Color'
 import { useNavigation } from '@react-navigation/native'
+import { Image } from 'expo-image'
+
+
 
 const width = Dimensions.get('window').width - 40
 
@@ -27,7 +30,7 @@ const ProductItem = ({ item }) => {
         <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { id: item._id })} style={styles.container}>
 
             <View style={{ position: 'relative' }}>
-                {loadingImage && (
+                {/* {loadingImage && (
                     <View style={{
                         position: 'absolute',
                         width: '100%',
@@ -39,12 +42,17 @@ const ProductItem = ({ item }) => {
                     }}>
                         <ActivityIndicator size="small" color="#007AFF" />
                     </View>
-                )}
+                )} */}
 
                 <Image
                     source={{ uri: item.image }}
                     style={styles.productImg}
-                    onLoadEnd={() => setLoadingImage(false)}
+                    placeholder={require("../assets/images/expo-img-placeholder.png")}
+                    cachePolicy="memory-disk"
+                    transition={500}
+                    placeholderContentFit='cover'
+                    contentFit='cover'
+                    // onLoadEnd={() => setLoadingImage(false)}
                 />
             </View>
 

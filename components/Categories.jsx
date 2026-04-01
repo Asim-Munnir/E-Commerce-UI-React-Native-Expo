@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import React from 'react'
 import { Colors } from '../constants/Color'
+import { Image } from 'expo-image'
 
 const Categories = ({ categories }) => {
     return (
@@ -16,12 +17,16 @@ const Categories = ({ categories }) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item, index }) => (
+                renderItem={({ item, _ }) => (
                     <TouchableOpacity>
-                    <View style={styles.item}>
-                        <Image source={{uri: item.image}} style={styles.itemImg} />
-                        <Text>{item.name.slice(0,10)}...</Text>
-                    </View>
+                        <View style={styles.item}>
+                            <Image
+                                source={{ uri: item.image }}
+                                style={styles.itemImg} placeholder={require("../assets/images/expo-img-placeholder.png")}
+                                cachePolicy="memory-disk"
+                            />
+                            <Text>{item.name.slice(0, 10)}...</Text>
+                        </View>
                     </TouchableOpacity>
                 )}
             />

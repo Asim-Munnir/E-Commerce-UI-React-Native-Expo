@@ -1,15 +1,18 @@
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import ProductList from '../../components/ProductList'
 import Categories from '../../components/Categories'
 import ProductItem from '../../components/ProductItem'
+import { Image } from 'expo-image'
+import { HomeSkeleton } from '../../components/HomeSkeleton'
 
 
 const HomeScreen = () => {
   const [data, setData] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
 
   // https://api.escuelajs.co/api/v1/products
   // https://dummyjson.com/products/categories
@@ -25,6 +28,7 @@ const HomeScreen = () => {
       console.log(error)
     } finally {
       setLoading(false)
+      setRefreshing(false);
     }
   }
 
@@ -44,14 +48,21 @@ const HomeScreen = () => {
     getCategories()
   }, [])
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getProducts();
+    getCategories()
+  }, []);
+
   return (
     <View style={styles.container}>
       {
         loading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
-            <Text style={{ marginTop: 10 }}>Loading ...</Text>
-          </View>
+          // <View style={styles.loaderContainer}>
+          //   <ActivityIndicator size="large" color="#007AFF" />
+          //   <Text style={{ marginTop: 10 }}>Loading ...</Text>
+          // </View>
+          <HomeSkeleton />
         ) : (
           <FlatList
             data={data}
@@ -67,6 +78,8 @@ const HomeScreen = () => {
                   <Image
                     source={require('../../assets/images/sale-banner1.jpg')}
                     style={{ width: '100%', height: 150, borderRadius: 15 }}
+                    placeholder={require('../../assets/images/expo-img-placeholder.png')}
+                    cachePolicy="memory-disk"
                   />
                 </View>
 
@@ -79,6 +92,10 @@ const HomeScreen = () => {
             renderItem={({ item }) => (
               <ProductItem item={item} />
             )}
+
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#4e8cff']} />
+            }
           />
         )
       }
