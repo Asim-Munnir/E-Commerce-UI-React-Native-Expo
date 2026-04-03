@@ -7,11 +7,35 @@ import Toast from 'react-native-toast-message';
 import { Image } from 'expo-image'
 
 const CartScreen = () => {
-  const { cartItems, removeFromCart } = useContext(CartContext)
+  const { cartItems, removeFromCart, setCartItems } = useContext(CartContext)
 
   // Total price calculate
   const totalPrice = cartItems.reduce((total, item) => total + item.price, 0)
   const totalQty = cartItems.length * 2  // dummy quantity = 2
+
+
+  const increaseQty = (productId) => {
+    setCartItems(prevCart =>
+      prevCart.map(item =>
+        item._id === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+
+  const decreaseQty = (productId) => {
+    setCartItems(prevCart =>
+      prevCart.map(item =>
+        item._id === productId
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+
 
   return (
     <>
@@ -32,13 +56,20 @@ const CartScreen = () => {
 
                   <View style={styles.itemControlWrapper}>
                     <View style={styles.quantityControlWrapper}>
-                      <TouchableOpacity style={styles.quantityControl}>
-                        <Ionicons name='remove-outline' size={20} color={Colors.black} />
+                      <TouchableOpacity
+                        style={[
+                          styles.quantityControl,
+                          item.quantity === 1 && { opacity: 0.4 } // 👈 fade effect
+                        ]}
+                        disabled={item.quantity === 1}
+                        onPress={() => decreaseQty(item._id)}
+                      >
+                        <Ionicons name='remove-outline' size={20} color="black" />
                       </TouchableOpacity>
 
-                      <Text>2</Text>
+                      <Text>{item?.quantity}</Text>
 
-                      <TouchableOpacity style={styles.quantityControl}>
+                      <TouchableOpacity style={styles.quantityControl} onPress={() => increaseQty(item?._id)}>
                         <Ionicons name='add-outline' size={20} color={Colors.black} />
                       </TouchableOpacity>
                     </View>
