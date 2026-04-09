@@ -11,7 +11,7 @@ export const CartProvider = ({ children }) => {
         if (existing) {
             // product already hai → quantity +1
             setCartItems(cartItems.map(item =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
             ));
         } else {
             // product new → quantity 1 add kar
@@ -20,7 +20,9 @@ export const CartProvider = ({ children }) => {
     };
 
     const removeFromCart = (productId) => {
-        setCartItems(cartItems.filter(item => item._id !== productId));
+        setCartItems(prev =>
+            prev.filter(item => item._id !== productId)
+        );
     };
 
     return (
