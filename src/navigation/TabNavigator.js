@@ -6,15 +6,17 @@ import { Ionicons } from "@expo/vector-icons";
 import ExploreScreen from "../screens/ExploreScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import Header from "../../components/Header";
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { useCartStore } from "../store/cartStore";
+// import { useContext } from "react";
+// import { CartContext } from "../context/CartContext";
 
 
 const Tab = createBottomTabNavigator()
 
 export default function TabNavigator() {
 
-    const { cartItems } = useContext(CartContext);
+    // const { cartItems } = useContext(CartContext);
+    const cartItems = useCartStore((state) => state.cartItems);
 
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>

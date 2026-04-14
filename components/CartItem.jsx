@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 
 const CartItem = ({ item, increaseQty, decreaseQty, removeFromCart }) => {
 
-    // console.log("Rendering:", item.title);
+    console.log("Rendering:", item.title);
 
     return (
         <View style={styles.itemWrapper}>
@@ -85,7 +85,21 @@ const CartItem = ({ item, increaseQty, decreaseQty, removeFromCart }) => {
     );
 };
 
-export default React.memo(CartItem);
+// export default React.memo(CartItem, (prev, next) => {
+//     return (
+//         prev.item.quantity === next.item.quantity &&
+//         prev.item._id === next.item._id
+//     );
+// });
+
+// export default React.memo(CartItem, (prev, next) => {
+//     return (
+//         prev.item.quantity === next.item.quantity &&
+//         prev.item._id === next.item._id
+//     );
+// });
+
+export default CartItem
 
 // ================= STYLES =================
 const styles = StyleSheet.create({

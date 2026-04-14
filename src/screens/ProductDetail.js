@@ -4,11 +4,12 @@ import { useRoute } from '@react-navigation/native'
 import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/Color'
-import { useContext } from 'react';
-import { CartContext } from '../context/CartContext';
+// import { useContext } from 'react';
+// import { CartContext } from '../context/CartContext';
 import Toast from 'react-native-toast-message';
 import { Image } from 'expo-image'
 import { AboutSkeleton } from '../../components/AboutSkeleton'
+import { useCartStore } from '../store/cartStore'
 
 
 const ProductDetail = () => {
@@ -19,7 +20,8 @@ const ProductDetail = () => {
   const [wishlist, setWishlist] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const { addToCart } = useContext(CartContext);
+  // const { addToCart } = useContext(CartContext);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const toggleWishlist = (productId) => {
     if (wishlist.includes(productId)) {

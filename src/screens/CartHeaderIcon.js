@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { CartContext } from "../context/CartContext";
+// import { CartContext } from "../context/CartContext";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../constants/Color";
+import { useCartStore } from "../store/cartStore";
 
 const CartHeaderIcon = () => {
-    const { cartItems } = useContext(CartContext);
+    // const { cartItems } = useContext(CartContext);
     const navigation = useNavigation();
+    const cartItems = useCartStore((state) => state.cartItems);
 
     return (
         <TouchableOpacity

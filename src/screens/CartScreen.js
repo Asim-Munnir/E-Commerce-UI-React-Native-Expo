@@ -1,14 +1,20 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
-import React, { useCallback, useContext } from 'react'
+// import React, { useCallback, useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/Color'
-import { CartContext } from '../context/CartContext'
+// import { CartContext } from '../context/CartContext'
 import Toast from 'react-native-toast-message';
 import { Image } from 'expo-image'
-import CartItem from '../../components/CartItem'
+import { useCartStore } from '../store/cartStore';
+import CartItem from '../../components/CartItem';
+// import CartItem from '../../components/CartItem'
 
 const CartScreen = () => {
-  const { cartItems, removeFromCart, setCartItems } = useContext(CartContext)
+  // const { cartItems, removeFromCart, setCartItems } = useContext(CartContext)
+  const increaseQty = useCartStore((state) => state.increaseQty);
+  const decreaseQty = useCartStore((state) => state.decreaseQty);
+  const cartItems = useCartStore((state) => state.cartItems);
+  const removeFromCart = useCartStore((state) => state.removeFromCart)
 
   // Total price calculate
   const totalPrice = cartItems.reduce(
@@ -16,33 +22,34 @@ const CartScreen = () => {
     0
   );
 
+
   const totalQty = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
   );
 
 
-  const increaseQty = useCallback((productId) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item._id === productId
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
-  }, []);
+  // const increaseQty = useCallback((productId) => {
+  //   setCartItems(prev =>
+  //     prev.map(item =>
+  //       item._id === productId
+  //         ? { ...item, quantity: item.quantity + 1 }
+  //         : item
+  //     )
+  //   );
+  // }, []);
 
 
   // Decrease Quantity
 
-  const decreaseQty = useCallback((productId) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item?._id === productId ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    )
-  }, [])
+  // const decreaseQty = useCallback((productId) => {
+  //   setCartItems(prev =>
+  //     prev.map(item =>
+  //       item?._id === productId ? { ...item, quantity: item.quantity - 1 }
+  //         : item
+  //     )
+  //   )
+  // }, [])
 
   // Decrease Quantity
   // const decreaseQty = (productId) => {
@@ -56,6 +63,17 @@ const CartScreen = () => {
   // };
 
 
+  // const renderItem = useCallback(({ item }) => {
+  //   return (
+  //     <CartItem
+  //       item={item}
+  //       increaseQty={increaseQty}
+  //       decreaseQty={decreaseQty}
+  //       removeFromCart={removeFromCart}
+  //     />
+  //   );
+  // }, [increaseQty, decreaseQty, removeFromCart]);
+
 
   return (
     <>
@@ -66,12 +84,72 @@ const CartScreen = () => {
           <FlatList
             data={cartItems}
             keyExtractor={(item) => item?._id.toString()}
-            renderItem={({ item }) => <CartItem item={item} increaseQty={increaseQty} decreaseQty={decreaseQty} removeFromCart={removeFromCart} />}
-            initialNumToRender={3}
-            maxToRenderPerBatch={5}
-            windowSize={3}
-            removeClippedSubviews={true}
-            updateCellsBatchingPeriod={30}
+            renderItem={({ item }) => (
+              <View style={styles.itemWrapper}>
+                <Image source={{ uri: item.image }} style={styles.itemImg} />
+
+                <View style={styles.itemInfoWrapper}>
+                  <Text style={styles.itemtext}>{item.title}</Text>
+                  <Text style={styles.itemtext}>${item.price}</Text>
+
+                  <View style={styles.itemControlWrapper}>
+                    <View style={styles.quantityControlWrapper}>
+                      <TouchableOpacity
+                        style={[
+                          styles.quantityControl,
+                          item.quantity === 1 && { opacity: 0.4 } // 👈 fade effect
+                        ]}
+                        disabled={item.quantity === 1}
+                        onPress={() => decreaseQty(item._id)}
+                      >
+                        <Ionicons name='remove-outline' size={20} color="black" />
+                      </TouchableOpacity>
+
+                      <Text>{item?.quantity}</Text>
+
+                      <TouchableOpacity style={styles.quantityControl} onPress={() => increaseQty(item?._id)}>
+                        <Ionicons name='add-outline' size={20} color={Colors.black} />
+                      </TouchableOpacity>
+                    </View>
+
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          "Remove Item",
+                          "Are you sure you want to remove this product from cart?",
+                          [
+                            {
+                              text: "Cancel",
+                              style: "cancel"
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                removeFromCart(item._id);
+                                Toast.show({
+                                  type: 'success',
+                                  text1: 'Item removed from cart',
+                                  text2: `${item?.title} deleted successfully`,
+                                  visibilityTime: 3000,
+                                });
+                              }
+                            }
+                          ]
+                        );
+                      }}
+                    >
+                      <Ionicons name='trash-outline' size={20} color={'red'} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                      <Ionicons name='heart-outline' size={20} color={Colors.black} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
+
           />
         )}
       </View>
