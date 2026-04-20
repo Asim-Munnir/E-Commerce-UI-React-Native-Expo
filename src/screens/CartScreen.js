@@ -86,6 +86,10 @@ const CartScreen = () => {
             data={cartItems}
             keyExtractor={(item) => item?._id.toString()}
             renderItem={renderItem}
+            removeClippedSubviews={true}
+            initialNumToRender={5}
+            maxToRenderPerBatch={5}
+            windowSize={5}
           />
         )}
       </View>
