@@ -58,7 +58,7 @@ export const useCartStore = create((set, get) => ({
             ),
         })),
 
-        // clear cart
-        clearCart : () => set({ cartItems: []})
+    // clear cart
+    clearCart: () => set({ cartItems: [] })
 
 }));
