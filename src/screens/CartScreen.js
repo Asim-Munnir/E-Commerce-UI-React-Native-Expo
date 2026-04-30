@@ -45,7 +45,6 @@ const CartScreen = () => {
   const handleCheckout = async () => {
     try {
 
-      // 1. backend call (payment create)
       const res = await axios.post(
         "http://192.168.0.105:4000/api/v1/payment/create-payment-intent",
         {
@@ -55,7 +54,6 @@ const CartScreen = () => {
 
       const clientSecret = res.data.clientSecret;
 
-      // 2. init stripe sheet
       const { error: initError } = await initPaymentSheet({
         paymentIntentClientSecret: clientSecret,
         merchantDisplayName: "E-Commerce Store",
@@ -66,7 +64,6 @@ const CartScreen = () => {
         return;
       }
 
-      // 3. open payment UI
       const { error: presentError } = await presentPaymentSheet();
 
       if (presentError) {
@@ -74,8 +71,6 @@ const CartScreen = () => {
       } else {
         navigation.navigate("successScreen")
 
-        // 4. cart clear (optional)
-        // useCartStore.getState().clearCart();
       }
 
     } catch (error) {
