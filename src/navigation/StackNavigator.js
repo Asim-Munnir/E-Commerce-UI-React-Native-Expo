@@ -10,6 +10,7 @@ import { Colors } from "../../constants/Color";
 import { useNavigation } from "@react-navigation/native";
 import CartScreen from "../screens/CartScreen";
 import CartHeaderIcon from "../screens/CartHeaderIcon";
+import SuccessScreen from "../screens/SuccessScreen";
 
 
 const Stack = createNativeStackNavigator()
@@ -34,6 +35,12 @@ export default function StackNavigator() {
                     title: "Product Details",
                     headerRight: () => <CartHeaderIcon />,
                 }}
+            />
+
+            <Stack.Screen
+            name="successScreen"
+            component={SuccessScreen}
+            options={{headerShown: false}}
             />
         </Stack.Navigator>
     )

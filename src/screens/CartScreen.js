@@ -10,12 +10,19 @@ import CartItem from '../../components/CartItem';
 import { useCallback } from 'react';
 // import CartItem from '../../components/CartItem'
 
+import axios from "axios";
+import { useStripe } from "@stripe/stripe-react-native";
+import { useNavigation } from '@react-navigation/native';
+
+
 const CartScreen = () => {
   // const { cartItems, removeFromCart, setCartItems } = useContext(CartContext)
   const increaseQty = useCartStore((state) => state.increaseQty);
   const decreaseQty = useCartStore((state) => state.decreaseQty);
   const cartItems = useCartStore((state) => state.cartItems);
   const removeFromCart = useCartStore((state) => state.removeFromCart)
+
+  const navigation = useNavigation()
 
   // Total price calculate
   const totalPrice = cartItems.reduce(
@@ -28,6 +35,53 @@ const CartScreen = () => {
     (total, item) => total + item.quantity,
     0
   );
+
+
+  // Stripe Payment integration
+
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+
+  const handleCheckout = async () => {
+    try {
+
+      // 1. backend call (payment create)
+      const res = await axios.post(
+        "http://192.168.0.105:4000/api/v1/payment/create-payment-intent",
+        {
+          amount: totalPrice * 100,
+        }
+      );
+
+      const clientSecret = res.data.clientSecret;
+
+      // 2. init stripe sheet
+      const { error: initError } = await initPaymentSheet({
+        paymentIntentClientSecret: clientSecret,
+        merchantDisplayName: "E-Commerce Store",
+      });
+
+      if (initError) {
+        console.log(initError);
+        return;
+      }
+
+      // 3. open payment UI
+      const { error: presentError } = await presentPaymentSheet();
+
+      if (presentError) {
+        console.log("Payment Failed", presentError);
+      } else {
+        navigation.navigate("successScreen")
+
+        // 4. cart clear (optional)
+        // useCartStore.getState().clearCart();
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   // const increaseQty = useCallback((productId) => {
@@ -100,7 +154,7 @@ const CartScreen = () => {
           <Text style={styles.qtyTxt}>Total QTY: {totalQty}</Text>
         </View>
 
-        <TouchableOpacity style={styles.checkoutBtn}>
+        <TouchableOpacity style={styles.checkoutBtn} onPress={handleCheckout}>
           <Text style={styles.checkoutText}>Checkout</Text>
         </TouchableOpacity>
       </View>
